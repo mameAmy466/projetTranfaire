@@ -24,7 +24,7 @@ class CompteController extends AbstractController
     {
         $values = json_decode($request->getContent());
         $parteniere=$this->getDoctrine()->getRepository(Partenaire::class)->findOneBy(['ninea'=>$values->ninea]);
-         //$idp=$parteniere->getId();
+
         $compte= new compte();
         $solde=0;
         $numero = 'MG';
@@ -40,6 +40,6 @@ class CompteController extends AbstractController
             'message' => 'est bien ajouté' ];
         return new JsonResponse($data, 201);
     }
-
+   
    
 }

@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\OperationRepository")
@@ -18,6 +20,8 @@ class Operation
 
     /**
      * @ORM\Column(type="float")
+     * @Assert\NotNull(message=" Vous devez renseigner le montant")
+     * @Assert\Length(min="75000", minMessage="Ce champ doit contenir un minimum de {{ limit }} fcfa")
      */
     private $montant;
 

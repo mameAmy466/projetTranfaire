@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\HttpFoundation\Response;
 use App\Entity\Compte;
 use App\Entity\Partenaire;
 use App\Entity\User;
@@ -67,6 +68,7 @@ class PartenaireController extends AbstractController
                 ];
                 return new JsonResponse($data, 201);
             }
+         
             $data = [
                 $status => 500,
                 $sms => 'Vous devez renseigner les clés username et password'
