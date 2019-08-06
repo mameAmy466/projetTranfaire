@@ -9,6 +9,7 @@ use App\Entity\Partenaire;
 use App\Form\PartenaireType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -41,10 +42,14 @@ class PartenaireController extends AbstractController
                         'Content-Type' => 'application/json'
                     ]);
                 } 
+                $compte=$this->getDoctrine()->getRepository(Compte::class)->findAll();
+                foreach ($compte as $key => $value) {
+                   $id=$value->getId(); 
+                }
                 $compte= new compte();
                 $solde=0;
                  $numero = 'MG';
-                 $numero .= sprintf('%04d',1);
+                 $numero .= sprintf('%04d',$id);
                 $compte->setNumero($numero);
                 $compte->setSolde($solde);
                 $compte->setPartenaire($par);
@@ -56,8 +61,7 @@ class PartenaireController extends AbstractController
                 $Values =$request->request->all();
                 $form->submit($Values);
                 $Files=$request->files->all()['imageName'];
-                var_dump($Values);
-                
+        
                 $user->setPassword($passwordEncoder->encodePassword($user,$form->get('plainPassword')->getData()));
                 $user->setRoles(["ROLE_ADMIN"]);
                 $user->setImageFile($Files);

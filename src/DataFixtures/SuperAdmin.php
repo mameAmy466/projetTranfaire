@@ -22,13 +22,13 @@ class SuperAdmin extends Fixture
 
          $user->setPassword($this->passwordEncoder->encodePassword(
              $user,
-            'the_new_password'
+            '123'
       ));
       $user->setRoles(["ROLE_ADMIN"]);
       $user->setUsername("mame@gueye12");
       $user->setNom("gueye");
       $user->setPrenom("mame amy");
-      $user->setImageName("mame.pnj");
+      $user->setImageName("mame.jpeg");
         $manager->persist($user);
         $manager->flush();
     }

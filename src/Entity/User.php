@@ -7,6 +7,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Vich\UploaderBundle\Mapping\Annotation\UploadableField;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
@@ -39,11 +40,15 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Le champ ne doit pas être vide")
+     * @Assert\Length(min="2", minMessage="Ce champ doit contenir un minimum de {{ limit }} caractères", max="255", maxMessage="Ce champ doit contenir un maximum de {{ limit }} caractères")
      */
     private $nom;
 
     /**
      * @ORM\Column(type="string", length=255)
+     *  @Assert\NotBlank(message="Le champ ne doit pas être vide")
+     * @Assert\Length(min="2", minMessage="Ce champ doit contenir un minimum de {{ limit }} caractères", max="255", maxMessage="Ce champ doit contenir un maximum de {{ limit }} caractères")
      */
     private $prenom;
 
@@ -56,6 +61,7 @@ class User implements UserInterface
      * NOTE: This is not a mapped field of entity metadata, just a simple property.
      * 
      * @Vich\UploadableField(mapping="user_image", fileNameProperty="imageName")
+     * @Assert\Image()
      * 
      * @var File
      */

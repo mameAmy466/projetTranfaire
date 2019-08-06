@@ -24,11 +24,14 @@ class CompteController extends AbstractController
     {
         $values = json_decode($request->getContent());
         $parteniere=$this->getDoctrine()->getRepository(Partenaire::class)->findOneBy(['ninea'=>$values->ninea]);
-         //$idp=$parteniere->getId();
+        $compte=$this->getDoctrine()->getRepository(Compte::class)->findAll();
+        foreach ($compte as $key => $value) {
+           $id=$value->getId(); 
+        }
         $compte= new compte();
         $solde=0;
         $numero = 'MG';
-        $numero .= sprintf('%04d',2);
+        $numero .= sprintf('%04d',$id);
         $compte->setNumero($numero);
         $compte->setSolde($solde);
         $compte->setPartenaire($parteniere);

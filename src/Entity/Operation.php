@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\OperationRepository")
@@ -18,6 +20,8 @@ class Operation
 
     /**
      * @ORM\Column(type="float")
+     *  @Assert\NotBlank()
+     *  @Assert\GreaterThanOrEqual(75000)
      */
     private $montant;
 
