@@ -24,7 +24,7 @@ class SuperAdmin extends Fixture
              $user,
             '123'
       ));
-      $user->setRoles(["ROLE_ADMIN"]);
+      $user->setRoles(["ROLE_SUPERADMIN"]);
       $user->setUsername("mame@gueye12");
       $user->setNom("gueye");
       $user->setPrenom("mame amy");

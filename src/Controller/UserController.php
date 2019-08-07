@@ -32,20 +32,19 @@ class UserController extends AbstractController
         $Values =$request->request->all();
         $form->submit($Values);
         $Files=$request->files->all()['imageName'];
-        var_dump($Values);
-        
         $user->setPassword($passwordEncoder->encodePassword($user,$form->get('plainPassword')->getData()));
         $user->setRoles(["ROLE_ADMIN"]);
         $user->setImageFile($Files);
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($user);
-            $entityManager->flush();
-          $errors = $validator->validate($user);
+           
+               $errors = $validator->validate($user);
                 if(count($errors)) {
                     $errors = $serializer->serialize($errors, 'json');
                     return new Response($errors, 500, [
                         'Content-Type' => 'application/json'
                     ]);
+                    $entityManager = $this->getDoctrine()->getManager();
+                    $entityManager->persist($user);
+                    $entityManager->flush();
                 } 
                 
                 $data = [

@@ -38,9 +38,9 @@ class OperationController extends AbstractController
              return new Response($errors, 500, [
                  'Content-Type' => 'application/json'
              ]);
+             $entityManager->persist($operation);
+             $entityManager->flush();
          }
-         $entityManager->persist($operation);
-         $entityManager->flush();
          $entityManager->persist($compte);
          $entityManager->flush();
          $data = [
