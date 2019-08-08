@@ -40,10 +40,10 @@ class PartenaireController extends AbstractController
                     return new Response($errors, 500, [
                         'Content-Type' => 'application/json'
                     ]);
-                    $entityManager = $this->getDoctrine()->getManager();
-                    $entityManager->persist($par);
-                    $entityManager->flush();
                 } 
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($par);
+                $entityManager->flush(); 
                 $compte=$this->getDoctrine()->getRepository(Compte::class)->findAll();
                 if ($compte==null) {
                     $id=0;
@@ -54,40 +54,57 @@ class PartenaireController extends AbstractController
                 }
                 $compte= new compte();
                 $solde=0;
-                 $numero = 'MG';
-                 $numero .= sprintf('%04d',$id);
+                $numero = 'MG';
+                $numero .= sprintf('%04d',$id);
                 $compte->setNumero($numero);
                 $compte->setSolde($solde);
                 $compte->setPartenaire($par);
                 $entityManager->persist($compte);
                 $entityManager->flush();
-                $user = new User();
-                $form = $this->createForm(UserType::class, $user);
-                $form->handleRequest($request);
-                $Values =$request->request->all();
-                $form->submit($Values);
-                $Files=$request->files->all()['imageName'];
-        
-                $user->setPassword($passwordEncoder->encodePassword($user,$form->get('plainPassword')->getData()));
-                $user->setRoles(["ROLE_ADMIN"]);
-                $user->setImageFile($Files);
-                $user->setPartenaire($par);
-                    $entityManager = $this->getDoctrine()->getManager();
-                    $errors = $validator->validate($user);
-                    if(count($errors)) {
-                        $errors = $serializer->serialize($errors, 'json');
-                        return new Response($errors, 500, [
-                            'Content-Type' => 'application/json'
-                        ]);
-                        $entityManager->persist($user);
-                        $entityManager->flush();    
-                    } 
+                $role=["ROLE_ADMIN"];
+                $this->addUser($request,$passwordEncoder,$serializer,$validator,$role,$par,$numero);
+                     
                         $data = [
                           'statut' => 201,
                           'massage' => 'L"utilisateur été bien ajouté'
                         ];
                         return new JsonResponse($data, 201);
     }
+        /**
+     * @Route("/addUser", name="user_new", methods={"GET","POST"})
+     */
+    public function addUser(Request $request,UserPasswordEncoderInterface $passwordEncoder, SerializerInterface $serializer,ValidatorInterface $validator,$role=["ROLE_CAISSIER"],$par=null,$numeroCompte=null):Response
+    {
+        $user = new User();
+        $form = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request);
+        $Values =$request->request->all();
+        $form->submit($Values);
+        $Files=$request->files->all()['imageName'];
+        $user->setPassword($passwordEncoder->encodePassword($user,$form->get('plainPassword')->getData()));
+        $user->setRoles($role);
+        $user->setPartenaire($par);
+        $user->setNumero($numeroCompte);
+        $user->setImageFile($Files);
+           
+               $errors = $validator->validate($user);
+                if(count($errors)) {
+                    $errors = $serializer->serialize($errors, 'json');
+                    return new Response($errors, 500, [
+                        'Content-Type' => 'application/json'
+                    ]);
+                    
+                } 
+                $entityManager = $this->getDoctrine()->getManager();
+                    $entityManager->persist($user);
+                    $entityManager->flush();
+                $data = [
+                  'statut' => 201,
+                  'massage' => 'L"utilisateur été bien ajouté'
+                ];
+                return new JsonResponse($data, 201);
+            }
+
      /**
      * @Route("/adduserP", name="partenaire_user")
      */
@@ -95,33 +112,10 @@ class PartenaireController extends AbstractController
      {
      $scot= new ServiceController();
       $idpar=$this->getUser()->getPartenaire();
-      var_dump($idpar);die();
-      $user = new User();
-      $form = $this->createForm(UserType::class, $user);
-      $form->handleRequest($request);
-      $Values =$request->request->all();
-      $form->submit($Values);
-      $Files=$request->files->all()['imageName'];
-      $user->setPassword($passwordEncoder->encodePassword($user,$form->get('plainPassword')->getData()));
-      $user->setRoles(["ROLE_ADMIN"]);
-      $user->setImageFile($Files);
-      $user->setPartenaire($idpar);
-      $errors = $validator->validate($user);
-      if(count($errors)) {
-          $errors = $serializer->serialize($errors, 'json');
-          return new Response($errors, 500, [
-              'Content-Type' => 'application/json'
-          ]);
-          $entityManager = $this->getDoctrine()->getManager();
-          $entityManager->persist($user);
-          $entityManager->flush();
-      } 
-         
-              
-              $data = [
-                'statut' => 201,
-                'massage' => 'L"utilisateur été bien ajouté'
-              ];
-              return new JsonResponse($data, 201);
-          }
+     $compte=$idpar->getCompte();
+     $numero=$compte[0]->getNumero();
+     $role=["ROLE_USER"];
+      $this->addUser($request,$passwordEncoder,$serializer,$validator,$role,$idpar,$numero);
+     }   
+      
 }

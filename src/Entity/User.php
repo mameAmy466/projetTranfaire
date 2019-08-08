@@ -47,7 +47,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     *  @Assert\NotBlank(message="Le champ ne doit pas être vide")
+     * @Assert\NotBlank(message="Le champ ne doit pas être vide")
      * @Assert\Length(min="2", minMessage="Ce champ doit contenir un minimum de {{ limit }} caractères", max="255", maxMessage="Ce champ doit contenir un maximum de {{ limit }} caractères")
      */
     private $prenom;
@@ -75,7 +75,7 @@ class User implements UserInterface
     private $imageName;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime",nullable=true)
      *
      * @var \DateTime
      */
